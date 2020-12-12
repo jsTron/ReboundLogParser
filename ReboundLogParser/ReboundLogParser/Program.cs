@@ -25,6 +25,8 @@ namespace ReboundLogParser {
         ParseJson(@filePaths[m]);
         PrintResults();
       }
+      Console.Write("Press enter to close");
+      Console.ReadLine();
     }
 
     static void ParseJson(string fileName) {
