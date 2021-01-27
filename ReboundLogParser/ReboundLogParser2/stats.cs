@@ -4,15 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReboundLogParser
-{
+namespace ReboundLogParser2 {
   class stats
   {
     
 
     public stats(dynamic statsObject)
     {
-      name = statsObject.username;
+      PlayerName = statsObject.username;
       team = statsObject.team;
       try {
         Goals = statsObject.stats.goals.Value;
@@ -29,10 +28,10 @@ namespace ReboundLogParser
       }
 
       try {
-        Secondary_assists = statsObject.stats.secondary_assists.Value;
+        Sec_assists = statsObject.stats.secondary_assists.Value;
       }
       catch {
-        Secondary_assists = 0;
+        Sec_assists = 0;
       }
 
       try {
@@ -107,28 +106,28 @@ namespace ReboundLogParser
       }
 
       try {
-        game_winning_goals = statsObject.stats.game_winning_goals.Value;
+        GW_Goals = statsObject.stats.game_winning_goals.Value;
       }
       catch {
-        game_winning_goals = 0;
+        GW_Goals = 0;
       }
     }
 
-    public string name;
+    public string PlayerName { get; set; }
     public string team;
-    public double Goals;
-    public double Primary_assists;
-    public double Secondary_assists;
-    public double Assists;
-    public double Shots;
-    public double Saves;
-    public double Faceoffs_won;
-    public double Faceoffs_lost;
-    public double Takeaways;
-    public double Turnovers;
-    public double Post_hits;
-    public double Passes;
-    public double Blocks;
-    public double game_winning_goals;
+    public double Goals { get; set; }
+    public double Primary_assists { get; set; }
+    public double Sec_assists { get; set; }
+    public double Assists { get; set; }
+    public double Shots { get; set; }
+    public double Saves { get; set; }
+    public double Faceoffs_won { get; set; }
+    public double Faceoffs_lost { get; set; }
+    public double Takeaways { get; set; }
+    public double Turnovers { get; set; }
+    public double Post_hits { get; set; }
+    public double Passes { get; set; }
+    public double Blocks { get; set; }
+    public double GW_Goals { get; set; }
   }
 }
