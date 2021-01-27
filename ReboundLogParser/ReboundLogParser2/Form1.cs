@@ -16,7 +16,7 @@ namespace ReboundLogParser2 {
     static List<stats> awayTeamPlayers = new List<stats>();
     static string homeScore;
     static string awayScore;
-    static bool OT;
+    static bool OT = false;
     static string loadedFile;
     static bool multipleFiles = false;
     public Form1() {
@@ -50,6 +50,8 @@ namespace ReboundLogParser2 {
       homeDataGrid.Rows.Clear();
       awayDataGrid.Rows.Clear();
 
+      OT = false;
+      multipleFiles = false;
 
       loadFiles();
       HomeTeam.Text = "Home Team: " + homeScore;
