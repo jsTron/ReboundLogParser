@@ -39,9 +39,9 @@
       // 
       // LoadLogsButton
       // 
-      this.LoadLogsButton.Location = new System.Drawing.Point(1382, 12);
+      this.LoadLogsButton.Location = new System.Drawing.Point(1354, 52);
       this.LoadLogsButton.Name = "LoadLogsButton";
-      this.LoadLogsButton.Size = new System.Drawing.Size(75, 23);
+      this.LoadLogsButton.Size = new System.Drawing.Size(102, 42);
       this.LoadLogsButton.TabIndex = 0;
       this.LoadLogsButton.Text = "Load Logs";
       this.LoadLogsButton.UseVisualStyleBackColor = true;
@@ -122,9 +122,9 @@
       this.MultipleFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.MultipleFiles.Location = new System.Drawing.Point(938, 12);
       this.MultipleFiles.Name = "MultipleFiles";
-      this.MultipleFiles.Size = new System.Drawing.Size(181, 25);
+      this.MultipleFiles.Size = new System.Drawing.Size(285, 25);
       this.MultipleFiles.TabIndex = 11;
-      this.MultipleFiles.Text = "Multiple Log Files";
+      this.MultipleFiles.Text = "Multiple log files in log folder";
       this.MultipleFiles.Visible = false;
       // 
       // Form1
