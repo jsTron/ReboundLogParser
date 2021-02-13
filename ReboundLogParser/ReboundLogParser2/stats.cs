@@ -35,13 +35,6 @@ namespace ReboundLogParser2 {
       }
 
       try {
-        Assists = statsObject.stats.assists.Value;
-      }
-      catch {
-        Assists = 0;
-      }
-
-      try {
         Shots = statsObject.stats.shots.Value;
       }
       catch {
@@ -111,6 +104,13 @@ namespace ReboundLogParser2 {
       catch {
         GW_Goals = 0;
       }
+
+      try {
+        Possession_Time = statsObject.stats.possession_time_sec.Value;
+      }
+      catch {
+        Possession_Time = 0;
+      }
     }
 
     public void addValues(dynamic statsObject) {
@@ -133,13 +133,6 @@ namespace ReboundLogParser2 {
       }
       catch {
         Sec_assists += 0;
-      }
-
-      try {
-        Assists += statsObject.stats.assists.Value;
-      }
-      catch {
-        Assists += 0;
       }
 
       try {
@@ -212,13 +205,19 @@ namespace ReboundLogParser2 {
       catch {
         GW_Goals += 0;
       }
+
+      try {
+        Possession_Time += statsObject.stats.possession_time_sec.Value;
+      }
+      catch {
+        Possession_Time += 0;
+      }
     }
     public string PlayerName { get; set; }
     public string team;
     public double Goals { get; set; }
     public double Primary_assists { get; set; }
     public double Sec_assists { get; set; }
-    public double Assists { get; set; }
     public double Shots { get; set; }
     public double Saves { get; set; }
     public double Faceoffs_won { get; set; }
@@ -229,5 +228,6 @@ namespace ReboundLogParser2 {
     public double Passes { get; set; }
     public double Blocks { get; set; }
     public double GW_Goals { get; set; }
+    public double Possession_Time { get; set; }
   }
 }
