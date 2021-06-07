@@ -33,6 +33,8 @@
       this.HomeOT = new System.Windows.Forms.Label();
       this.AwayOT = new System.Windows.Forms.Label();
       this.MultipleFiles = new System.Windows.Forms.Label();
+      this.label1 = new System.Windows.Forms.Label();
+      this.periodLabel = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.homeDataGrid)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.awayDataGrid)).BeginInit();
       this.SuspendLayout();
@@ -127,11 +129,33 @@
       this.MultipleFiles.Text = "Multiple log files in log folder";
       this.MultipleFiles.Visible = false;
       // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F);
+      this.label1.Location = new System.Drawing.Point(1354, 13);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(74, 25);
+      this.label1.TabIndex = 12;
+      this.label1.Text = "Period:";
+      // 
+      // periodLabel
+      // 
+      this.periodLabel.AutoSize = true;
+      this.periodLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F);
+      this.periodLabel.Location = new System.Drawing.Point(1433, 13);
+      this.periodLabel.Name = "periodLabel";
+      this.periodLabel.Size = new System.Drawing.Size(23, 25);
+      this.periodLabel.TabIndex = 13;
+      this.periodLabel.Text = "3";
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(1469, 535);
+      this.Controls.Add(this.periodLabel);
+      this.Controls.Add(this.label1);
       this.Controls.Add(this.MultipleFiles);
       this.Controls.Add(this.AwayOT);
       this.Controls.Add(this.HomeOT);
@@ -165,6 +189,8 @@
     private System.Windows.Forms.Label HomeOT;
     private System.Windows.Forms.Label AwayOT;
     private System.Windows.Forms.Label MultipleFiles;
+    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label periodLabel;
   }
 }
 

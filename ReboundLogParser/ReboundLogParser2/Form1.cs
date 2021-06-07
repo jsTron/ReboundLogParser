@@ -16,11 +16,12 @@ namespace ReboundLogParser2 {
     static List<stats> awayTeamPlayers = new List<stats>();
     static int homeScore;
     static int awayScore;
+    static int period;
     static string currentPeriod;
     static bool OT = false;
     static string loadedFile;
     static bool multipleFiles = false;
-    const string WRONGPERIODTEXT = "The log file entered is not the 3rd period of a game.";
+    const string WRONGPERIODTEXT = "The log file entered is not the 3rd period";
     const string MULTIPLEFILESTEXT = "Multiple log files in log folder";
     public Form1() {
       InitializeComponent();
@@ -30,6 +31,7 @@ namespace ReboundLogParser2 {
       loadFiles();
       HomeTeam.Text = "Home Team: " + homeScore.ToString();
       AwayTeam.Text = "Away Team: " + awayScore.ToString();
+      periodLabel.Text = period.ToString();
       if (OT) {
         if (homeScore > awayScore) {
           HomeOT.Visible = true;
@@ -110,8 +112,10 @@ namespace ReboundLogParser2 {
       }
       string homeScoreString = o1.score.home;
       string awayScoreString = o1.score.away;
+      string periodString = o1.current_period;
       homeScore += int.Parse(homeScoreString);
       awayScore += int.Parse(awayScoreString);
+      period = int.Parse(periodString);
       currentPeriod = o1.current_period;
       foreach (dynamic player in o1.players) {
         if (player.team == "home") {
@@ -156,7 +160,7 @@ namespace ReboundLogParser2 {
       }
 
       try {
-        awayTeamOT = statsObject.players[3].stats.overtime_wins;
+        awayTeamOT = statsObject.players[0].stats.overtime_losses;
       }
       catch {
         awayTeamOT = 0;
