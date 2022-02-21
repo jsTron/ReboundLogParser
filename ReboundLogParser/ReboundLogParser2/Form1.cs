@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using Newtonsoft.Json.Linq;
@@ -242,20 +237,16 @@ namespace ReboundLogParser2 {
             // Find out what team should have names loaded to ComboBoxes
             var isHomeTeam = (sender as Button).Name == "button1" ? true : false;
 
-            if ((isHomeTeam ? _homePlayers : _awayPlayers) is null)
-            {
-                _result = await _browser.GetBrowser().MainFrame.EvaluateScriptAsync(
-                    "function foo() {players = new Array();" +
-                    "rows = document.getElementsByClassName(\"sticky-col\")[0].getElementsByTagName(\"tr\");" +
-                    "for (i = 0; i < rows.length; i++)" +
-                    "{" +
-                    "players.push(rows[i].getElementsByTagName(\"th\")[0].innerHTML.toString().trim());" +
-                    "}" +
-                    "return players;}" +
-                    "foo();"
-                );
-                
-            }
+            _result = await _browser.GetBrowser().MainFrame.EvaluateScriptAsync(
+                "function foo() {players = new Array();" +
+                "rows = document.getElementsByClassName(\"sticky-col\")[0].getElementsByTagName(\"tr\");" +
+                "for (i = 0; i < rows.length; i++)" +
+                "{" +
+                "players.push(rows[i].getElementsByTagName(\"th\")[0].innerHTML.toString().trim());" +
+                "}" +
+                "return players;}" +
+                "foo();"
+            );
 
             if (_result != null && _result.Success)
             {
@@ -321,91 +312,17 @@ namespace ReboundLogParser2 {
             {
                 if (cb.SelectedIndex > -1)
                 {
-                    var cbIndex = teamPlayerBoxes.IndexOf(cb);
-                    frame.ExecuteJavaScriptAsync(
-                        $"document.getElementsByTagName(\"tbody\")[0]" +
-                        $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                        $".getElementsByTagName(\"td\")[{(int)StatsEnum.Goals}]" +
-                        $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].Goals};"
-                    );
-                    frame.ExecuteJavaScriptAsync(
-                        $"document.getElementsByTagName(\"tbody\")[0]" +
-                        $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                        $".getElementsByTagName(\"td\")[{(int)StatsEnum.PrimaryAssists}]" +
-                        $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].Primary_assists};"
-                    );
-                    frame.ExecuteJavaScriptAsync(
-                        $"document.getElementsByTagName(\"tbody\")[0]" +
-                        $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                        $".getElementsByTagName(\"td\")[{(int)StatsEnum.SecondaryAssists}]" +
-                        $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].Sec_assists};"
-                    );
-                    frame.ExecuteJavaScriptAsync(
-                        $"document.getElementsByTagName(\"tbody\")[0]" +
-                        $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                        $".getElementsByTagName(\"td\")[{(int)StatsEnum.Shots}]" +
-                        $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].Shots};"
-                    );
-                    frame.ExecuteJavaScriptAsync(
-                        $"document.getElementsByTagName(\"tbody\")[0]" +
-                        $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                        $".getElementsByTagName(\"td\")[{(int)StatsEnum.Saves}]" +
-                        $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].Saves};"
-                    );
-                    frame.ExecuteJavaScriptAsync(
-                        $"document.getElementsByTagName(\"tbody\")[0]" +
-                        $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                        $".getElementsByTagName(\"td\")[{(int)StatsEnum.FaceoffsWon}]" +
-                        $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].Faceoffs_won};"
-                    );
-                    frame.ExecuteJavaScriptAsync(
-                        $"document.getElementsByTagName(\"tbody\")[0]" +
-                        $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                        $".getElementsByTagName(\"td\")[{(int)StatsEnum.FaceoffsLost}]" +
-                        $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].Faceoffs_lost};"
-                    );
-                    frame.ExecuteJavaScriptAsync(
-                        $"document.getElementsByTagName(\"tbody\")[0]" +
-                        $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                        $".getElementsByTagName(\"td\")[{(int)StatsEnum.TakeAways}]" +
-                        $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].Takeaways};"
-                    );
-                    frame.ExecuteJavaScriptAsync(
-                        $"document.getElementsByTagName(\"tbody\")[0]" +
-                        $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                        $".getElementsByTagName(\"td\")[{(int)StatsEnum.TurnOvers}]" +
-                        $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].Turnovers};"
-                    );
-                    frame.ExecuteJavaScriptAsync(
-                        $"document.getElementsByTagName(\"tbody\")[0]" +
-                        $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                        $".getElementsByTagName(\"td\")[{(int)StatsEnum.PostHits}]" +
-                        $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].Post_hits};"
-                    );
-                    frame.ExecuteJavaScriptAsync(
-                        $"document.getElementsByTagName(\"tbody\")[0]" +
-                        $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                        $".getElementsByTagName(\"td\")[{(int)StatsEnum.Passes}]" +
-                        $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].Passes};"
-                    );
-                    frame.ExecuteJavaScriptAsync(
-                        $"document.getElementsByTagName(\"tbody\")[0]" +
-                        $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                        $".getElementsByTagName(\"td\")[{(int)StatsEnum.Blocks}]" +
-                        $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].Blocks};"
-                    );
-                    frame.ExecuteJavaScriptAsync(
-                         $"document.getElementsByTagName(\"tbody\")[0]" +
-                         $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                         $".getElementsByTagName(\"td\")[{(int)StatsEnum.GameWinningGoals}]" +
-                         $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].GW_Goals};"
-                     );
-                    frame.ExecuteJavaScriptAsync(
-                         $"document.getElementsByTagName(\"tbody\")[0]" +
-                         $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
-                         $".getElementsByTagName(\"td\")[{(int)StatsEnum.PossessionTime}]" +
-                         $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].Possession_Time};"
-                     );
+                    var values = Enum.GetValues(typeof(StatsEnum));
+                    foreach (StatsEnum stat in values)
+                    { 
+                        var cbIndex = teamPlayerBoxes.IndexOf(cb);
+                        frame.ExecuteJavaScriptAsync(
+                            $"document.getElementsByTagName(\"tbody\")[0]" +
+                            $".getElementsByTagName(\"tr\")[{cb.SelectedIndex}]" +
+                            $".getElementsByTagName(\"td\")[{(int)stat}]" +
+                            $".getElementsByTagName(\"input\")[0].value = {teamPlayers[cbIndex].GetPropertyValueByEnum(stat)};"
+                        );
+                    }
                 }
             }
         }
