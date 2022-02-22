@@ -70,6 +70,7 @@ namespace ReboundLogParser2 {
         {
             homeTeamPlayers.Clear();
             awayTeamPlayers.Clear();
+            ClearAllComboBoxes();
 
             homeDataGrid.DataSource = null;
             awayDataGrid.DataSource = null;
@@ -256,10 +257,12 @@ namespace ReboundLogParser2 {
                 if (isHomeTeam)
                 {
                     _homePlayers = x.OfType<string>().ToList();
+                    ClearHomeComboBoxes();
                 }
                 else
                 {
                     _awayPlayers = x.OfType<string>().ToList();
+                    ClearAwayComboBoxes();
                 }
                 PopulateComboBoxes(isHomeTeam ? _homePlayers : _awayPlayers, isHomeTeam);
             }
@@ -282,6 +285,36 @@ namespace ReboundLogParser2 {
                     box.Items.Clear();
                     box.Items.AddRange(players.ToArray<object>());
                 }
+            }
+        }
+
+        private void ClearAllComboBoxes()
+        {
+            var comboBoxes = _homePlayerBoxes;
+            comboBoxes.AddRange(_awayPlayerBoxes);
+
+            foreach (var box in comboBoxes)
+            {
+                box.SelectedIndex = -1;
+                box.Items.Clear();
+            }
+        }
+
+        private void ClearHomeComboBoxes()
+        {
+            foreach (var box in _homePlayerBoxes)
+            {
+                box.SelectedIndex = -1;
+                box.Items.Clear();
+            }
+        }
+
+        private void ClearAwayComboBoxes()
+        {
+            foreach (var box in _awayPlayerBoxes)
+            {
+                box.SelectedIndex = -1;
+                box.Items.Clear();
             }
         }
 
