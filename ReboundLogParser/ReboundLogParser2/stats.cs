@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ReboundLogParser2 {
   class stats
   {
-    
-
     public stats(dynamic statsObject)
     {
       PlayerName = statsObject.username;
@@ -213,6 +207,29 @@ namespace ReboundLogParser2 {
         Possession_Time += 0;
       }
     }
+
+    public double GetPropertyValueByEnum(StatsEnum enumValue)
+    {
+      Dictionary<StatsEnum, object> kvp = new Dictionary<StatsEnum, object>()
+      {
+        { StatsEnum.Goals, Goals },
+        { StatsEnum.PrimaryAssists, Primary_assists },
+        { StatsEnum.SecondaryAssists, Sec_assists },
+        { StatsEnum.Shots, Shots },
+        { StatsEnum.Saves, Saves },
+        { StatsEnum.FaceoffsWon, Faceoffs_won },
+        { StatsEnum.FaceoffsLost, Faceoffs_lost },
+        { StatsEnum.TakeAways, Takeaways },
+        { StatsEnum.TurnOvers, Turnovers },
+        { StatsEnum.PostHits, Post_hits },
+        { StatsEnum.Passes, Passes },
+        { StatsEnum.Blocks, Blocks },
+        { StatsEnum.GameWinningGoals, GW_Goals },
+        { StatsEnum.PossessionTime, Possession_Time }
+      };
+      return (double)kvp[enumValue];
+    }
+
     public string PlayerName { get; set; }
     public string team;
     public double Goals { get; set; }
