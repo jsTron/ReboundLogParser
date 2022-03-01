@@ -9,15 +9,15 @@ using CefSharp.WinForms;
 namespace ReboundLogParser2 {
     public partial class Form1 : Form
     {
-        static List<stats> homeTeamPlayers = new List<stats>();
-        static List<stats> awayTeamPlayers = new List<stats>();
-        static int homeScore;
-        static int awayScore;
-        static int period;
-        static string currentPeriod;
-        static bool OT = false;
-        static string loadedFile;
-        static bool multipleFiles = false;
+        static List<stats> _homeTeamPlayers = new List<stats>();
+        static List<stats> _awayTeamPlayers = new List<stats>();
+        static int _homeScore;
+        static int _awayScore;
+        static int _period;
+        static string _currentPeriod;
+        static bool _overTime = false;
+        static string _loadedFile;
+        static bool _multipleFiles = false;
         const string WRONGPERIODTEXT = "The log file entered is not the 3rd period";
         const string MULTIPLEFILESTEXT = "Multiple log files in log folder";
         private ChromiumWebBrowser _browser;
@@ -40,36 +40,28 @@ namespace ReboundLogParser2 {
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            loadFiles();
-            HomeTeam.Text = "Home Team: " + homeScore.ToString();
-            AwayTeam.Text = "Away Team: " + awayScore.ToString();
-            periodLabel.Text = period.ToString();
-            if (OT)
-            {
-                if (homeScore > awayScore)
-                {
-                    HomeOT.Visible = true;
-                }
-                else
-                {
-                    AwayOT.Visible = true;
-                }
-            }
-            MultipleFiles.Visible = multipleFiles;
-            if (currentPeriod != "3")
-            {
-                MultipleFiles.Text = WRONGPERIODTEXT;
-                MultipleFiles.Visible = true;
-            }
-            LogFileName.Text = loadedFile;
-            homeDataGrid.DataSource = homeTeamPlayers;
-            awayDataGrid.DataSource = awayTeamPlayers;
+            LoadLogFiles();
         }
 
         private void LoadLogsButton_Click(object sender, EventArgs e)
         {
-            homeTeamPlayers.Clear();
-            awayTeamPlayers.Clear();
+            LoadLogFiles();
+        }
+
+        private void LoadLogFiles()
+        {
+            ResetFormData();
+            LoadAndParseLogFiles();
+            SetLoadedFileDisplays();
+            SetTeamAndPeriodLabels();
+            CheckOvertimeWin();
+            PopulateDataGrid();
+        }
+
+        private void ResetFormData()
+        {
+            _homeTeamPlayers.Clear();
+            _awayTeamPlayers.Clear();
             ClearAllComboBoxes();
 
             homeDataGrid.DataSource = null;
@@ -78,18 +70,57 @@ namespace ReboundLogParser2 {
             awayDataGrid.Rows.Clear();
             MultipleFiles.Visible = false;
 
-            OT = false;
-            multipleFiles = false;
-            loadedFile = "";
-            homeScore = 0;
-            awayScore = 0;
+            _multipleFiles = false;
+            _loadedFile = "";
+            _homeScore = 0;
+            _awayScore = 0;
+        }
 
-            loadFiles();
-            HomeTeam.Text = "Home Team: " + homeScore.ToString();
-            AwayTeam.Text = "Away Team: " + awayScore.ToString();
-            if (OT)
+        static void LoadAndParseLogFiles()
+        {
+            string[] filePaths = Directory.GetFiles(@".\Logs\", "*.json",
+                                               SearchOption.TopDirectoryOnly);
+
+            for (int m = 0; m < filePaths.Length; m++)
             {
-                if (homeScore > awayScore)
+                ParseJson(@filePaths[m]);
+                _loadedFile += (@filePaths[m] + "   ");
+            }
+            if (filePaths.Length > 1)
+            {
+                _multipleFiles = true;
+            }
+            else if (filePaths.Length < 1)
+            {
+                _loadedFile = "Problem Loading File";
+            }
+        }
+
+        private void SetLoadedFileDisplays()
+        {
+            MultipleFiles.Text = MULTIPLEFILESTEXT;
+            MultipleFiles.Visible = _multipleFiles;
+            LogFileName.Text = _loadedFile;
+        }
+
+        private void SetTeamAndPeriodLabels()
+        {
+            HomeTeam.Text = "Home Team: " + _homeScore.ToString();
+            AwayTeam.Text = "Away Team: " + _awayScore.ToString();
+            periodLabel.Text = _period.ToString();
+
+            if (_currentPeriod != "3")
+            {
+                MultipleFiles.Text = WRONGPERIODTEXT;
+                MultipleFiles.Visible = true;
+            }
+        }
+
+        private void CheckOvertimeWin()
+        {
+            if (_overTime)
+            {
+                if (_homeScore > _awayScore)
                 {
                     HomeOT.Visible = true;
                 }
@@ -98,95 +129,72 @@ namespace ReboundLogParser2 {
                     AwayOT.Visible = true;
                 }
             }
-            MultipleFiles.Visible = multipleFiles;
-            LogFileName.Text = loadedFile;
-            MultipleFiles.Text = MULTIPLEFILESTEXT;
-            if (currentPeriod != "3")
+            else
             {
-                MultipleFiles.Text = WRONGPERIODTEXT;
-                MultipleFiles.Visible = true;
+                HomeOT.Visible = false;
+                AwayOT.Visible = false;
             }
-            homeDataGrid.DataSource = homeTeamPlayers;
-            homeDataGrid.DataSource = homeTeamPlayers;
-            awayDataGrid.DataSource = awayTeamPlayers;
         }
 
-        static void loadFiles()
+        private void PopulateDataGrid()
         {
-            string[] filePaths = Directory.GetFiles(@".\Logs\", "*.json",
-                                               SearchOption.TopDirectoryOnly);
-
-            for (int m = 0; m < filePaths.Length; m++)
-            {
-                ParseJson(@filePaths[m]);
-                loadedFile += (@filePaths[m] + "   ");
-            }
-            if (filePaths.Length > 1)
-            {
-                multipleFiles = true;
-            }
-            else if (filePaths.Length < 1)
-            {
-                loadedFile = "Problem Loading File";
-            }
+            homeDataGrid.DataSource = _homeTeamPlayers;
+            awayDataGrid.DataSource = _awayTeamPlayers;
         }
 
         static void ParseJson(string fileName)
         {
             dynamic o1 = JObject.Parse(File.ReadAllText(fileName));
-            if (checkOvertime(o1))
-            {
-                OT = true;
-            }
+            _overTime = CheckOvertime(o1);
             string homeScoreString = o1.score.home;
             string awayScoreString = o1.score.away;
             string periodString = o1.current_period;
-            homeScore += int.Parse(homeScoreString);
-            awayScore += int.Parse(awayScoreString);
-            period = int.Parse(periodString);
-            currentPeriod = o1.current_period;
+            _homeScore += int.Parse(homeScoreString);
+            _awayScore += int.Parse(awayScoreString);
+            _period = int.Parse(periodString);
+            _currentPeriod = o1.current_period;
             foreach (dynamic player in o1.players)
             {
                 if (player.team == "home")
                 {
-                    if (PlayerExists(player, homeTeamPlayers))
+                    if (PlayerExists(player, _homeTeamPlayers))
                     {
-                        for (int p = 0; p < homeTeamPlayers.Count; p++)
+                        for (int p = 0; p < _homeTeamPlayers.Count; p++)
                         {
-                            if (homeTeamPlayers[p].PlayerName == player.username.ToString())
+                            if (_homeTeamPlayers[p].PlayerName == player.username.ToString())
                             {
-                                homeTeamPlayers[p].addValues(player);
+                                _homeTeamPlayers[p].addValues(player);
                             }
                         }
                     }
                     else
                     {
-                        homeTeamPlayers.Add(new stats(player));
+                        _homeTeamPlayers.Add(new stats(player));
                     }
                 }
                 else
                 {
-                    if (PlayerExists(player, awayTeamPlayers))
+                    if (PlayerExists(player, _awayTeamPlayers))
                     {
-                        for (int p = 0; p < awayTeamPlayers.Count; p++)
+                        for (int p = 0; p < _awayTeamPlayers.Count; p++)
                         {
-                            if (awayTeamPlayers[p].PlayerName == player.username.ToString())
+                            if (_awayTeamPlayers[p].PlayerName == player.username.ToString())
                             {
-                                awayTeamPlayers[p].addValues(player);
+                                _awayTeamPlayers[p].addValues(player);
                             }
                         }
                     }
                     else
                     {
-                        awayTeamPlayers.Add(new stats(player));
+                        _awayTeamPlayers.Add(new stats(player));
                     }
                 }
             }
-            homeTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
-            awayTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
+            _homeTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
+            _awayTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
         }
 
-        static bool checkOvertime(dynamic statsObject)
+        static bool CheckOvertime(dynamic statsObject)
         {
             bool returnBool = false;
             double homeTeamOT;
@@ -333,11 +341,11 @@ namespace ReboundLogParser2 {
         private void FillStatsInWebForm(bool isHomeTeam)
         {
             var teamPlayerBoxes = _awayPlayerBoxes;
-            var teamPlayers = awayTeamPlayers;
+            var teamPlayers = _awayTeamPlayers;
             if (isHomeTeam)
             {
                 teamPlayerBoxes = _homePlayerBoxes;
-                teamPlayers = homeTeamPlayers;
+                teamPlayers = _homeTeamPlayers;
             }
 
             var frame = _browser.GetBrowser().MainFrame;
