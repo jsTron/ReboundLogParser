@@ -35,10 +35,10 @@ namespace ReboundLogParser2 {
             this.HomeOT = new System.Windows.Forms.Label();
             this.AwayOT = new System.Windows.Forms.Label();
             this.MultipleFiles = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.periodTextLabel = new System.Windows.Forms.Label();
             this.periodLabel = new System.Windows.Forms.Label();
             this.cefPanel1 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.loadHomePlayersButton = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
@@ -49,7 +49,7 @@ namespace ReboundLogParser2 {
             this.comboBox8 = new System.Windows.Forms.ComboBox();
             this.comboBox9 = new System.Windows.Forms.ComboBox();
             this.comboBox10 = new System.Windows.Forms.ComboBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.loadAwayPlayersButton = new System.Windows.Forms.Button();
             this.SendHomeStatsButton = new System.Windows.Forms.Button();
             this.SendAwayStatsButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.homeDataGrid)).BeginInit();
@@ -146,15 +146,15 @@ namespace ReboundLogParser2 {
             this.MultipleFiles.Text = "Multiple log files in log folder";
             this.MultipleFiles.Visible = false;
             // 
-            // label1
+            // periodTextLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F);
-            this.label1.Location = new System.Drawing.Point(1470, 14);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(74, 25);
-            this.label1.TabIndex = 12;
-            this.label1.Text = "Period:";
+            this.periodTextLabel.AutoSize = true;
+            this.periodTextLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F);
+            this.periodTextLabel.Location = new System.Drawing.Point(1470, 14);
+            this.periodTextLabel.Name = "periodTextLabel";
+            this.periodTextLabel.Size = new System.Drawing.Size(74, 25);
+            this.periodTextLabel.TabIndex = 12;
+            this.periodTextLabel.Text = "Period:";
             // 
             // periodLabel
             // 
@@ -173,15 +173,15 @@ namespace ReboundLogParser2 {
             this.cefPanel1.Size = new System.Drawing.Size(1558, 326);
             this.cefPanel1.TabIndex = 14;
             // 
-            // button1
+            // loadHomePlayersButton
             // 
-            this.button1.Location = new System.Drawing.Point(4, 66);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(119, 34);
-            this.button1.TabIndex = 15;
-            this.button1.Text = "Load Home Players";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.TeamPlayersLoadButton_Click);
+            this.loadHomePlayersButton.Location = new System.Drawing.Point(4, 66);
+            this.loadHomePlayersButton.Name = "loadHomePlayersButton";
+            this.loadHomePlayersButton.Size = new System.Drawing.Size(119, 34);
+            this.loadHomePlayersButton.TabIndex = 15;
+            this.loadHomePlayersButton.Text = "Load Home Players";
+            this.loadHomePlayersButton.UseVisualStyleBackColor = true;
+            this.loadHomePlayersButton.Click += new System.EventHandler(this.TeamPlayersLoadButton_Click);
             // 
             // comboBox1
             // 
@@ -190,6 +190,7 @@ namespace ReboundLogParser2 {
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(119, 21);
             this.comboBox1.TabIndex = 16;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox2
             // 
@@ -198,6 +199,7 @@ namespace ReboundLogParser2 {
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(119, 21);
             this.comboBox2.TabIndex = 16;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox3
             // 
@@ -206,6 +208,7 @@ namespace ReboundLogParser2 {
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(119, 21);
             this.comboBox3.TabIndex = 16;
+            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox4
             // 
@@ -214,6 +217,7 @@ namespace ReboundLogParser2 {
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(119, 21);
             this.comboBox4.TabIndex = 16;
+            this.comboBox4.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox5
             // 
@@ -222,6 +226,7 @@ namespace ReboundLogParser2 {
             this.comboBox5.Name = "comboBox5";
             this.comboBox5.Size = new System.Drawing.Size(119, 21);
             this.comboBox5.TabIndex = 16;
+            this.comboBox5.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox6
             // 
@@ -230,6 +235,7 @@ namespace ReboundLogParser2 {
             this.comboBox6.Name = "comboBox6";
             this.comboBox6.Size = new System.Drawing.Size(119, 21);
             this.comboBox6.TabIndex = 16;
+            this.comboBox6.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox7
             // 
@@ -238,6 +244,7 @@ namespace ReboundLogParser2 {
             this.comboBox7.Name = "comboBox7";
             this.comboBox7.Size = new System.Drawing.Size(119, 21);
             this.comboBox7.TabIndex = 16;
+            this.comboBox7.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox8
             // 
@@ -246,6 +253,7 @@ namespace ReboundLogParser2 {
             this.comboBox8.Name = "comboBox8";
             this.comboBox8.Size = new System.Drawing.Size(119, 21);
             this.comboBox8.TabIndex = 16;
+            this.comboBox8.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox9
             // 
@@ -254,6 +262,7 @@ namespace ReboundLogParser2 {
             this.comboBox9.Name = "comboBox9";
             this.comboBox9.Size = new System.Drawing.Size(119, 21);
             this.comboBox9.TabIndex = 16;
+            this.comboBox9.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox10
             // 
@@ -262,16 +271,17 @@ namespace ReboundLogParser2 {
             this.comboBox10.Name = "comboBox10";
             this.comboBox10.Size = new System.Drawing.Size(119, 21);
             this.comboBox10.TabIndex = 16;
+            this.comboBox10.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
-            // button2
+            // loadAwayPlayersButton
             // 
-            this.button2.Location = new System.Drawing.Point(4, 312);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(119, 34);
-            this.button2.TabIndex = 15;
-            this.button2.Text = "Load Away Players";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.TeamPlayersLoadButton_Click);
+            this.loadAwayPlayersButton.Location = new System.Drawing.Point(4, 312);
+            this.loadAwayPlayersButton.Name = "loadAwayPlayersButton";
+            this.loadAwayPlayersButton.Size = new System.Drawing.Size(119, 34);
+            this.loadAwayPlayersButton.TabIndex = 15;
+            this.loadAwayPlayersButton.Text = "Load Away Players";
+            this.loadAwayPlayersButton.UseVisualStyleBackColor = true;
+            this.loadAwayPlayersButton.Click += new System.EventHandler(this.TeamPlayersLoadButton_Click);
             // 
             // SendHomeStatsButton
             // 
@@ -281,7 +291,7 @@ namespace ReboundLogParser2 {
             this.SendHomeStatsButton.TabIndex = 17;
             this.SendHomeStatsButton.Text = "Send Home Stats";
             this.SendHomeStatsButton.UseVisualStyleBackColor = true;
-            this.SendHomeStatsButton.Click += new System.EventHandler(this.SendHomeStatsButton_Click);
+            this.SendHomeStatsButton.Click += new System.EventHandler(this.SendStatsButton_Click);
             // 
             // SendAwayStatsButton
             // 
@@ -291,7 +301,7 @@ namespace ReboundLogParser2 {
             this.SendAwayStatsButton.TabIndex = 17;
             this.SendAwayStatsButton.Text = "Send Away Stats";
             this.SendAwayStatsButton.UseVisualStyleBackColor = true;
-            this.SendAwayStatsButton.Click += new System.EventHandler(this.SendAwayStatsButton_Click);
+            this.SendAwayStatsButton.Click += new System.EventHandler(this.SendStatsButton_Click);
             // 
             // Form1
             // 
@@ -310,11 +320,11 @@ namespace ReboundLogParser2 {
             this.Controls.Add(this.comboBox3);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.loadAwayPlayersButton);
+            this.Controls.Add(this.loadHomePlayersButton);
             this.Controls.Add(this.cefPanel1);
             this.Controls.Add(this.periodLabel);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.periodTextLabel);
             this.Controls.Add(this.MultipleFiles);
             this.Controls.Add(this.AwayOT);
             this.Controls.Add(this.HomeOT);
@@ -337,9 +347,9 @@ namespace ReboundLogParser2 {
 
     }
 
-        #endregion
+    #endregion
 
-        private System.Windows.Forms.Button LoadLogsButton;
+    private System.Windows.Forms.Button LoadLogsButton;
     private System.Windows.Forms.TextBox LogFileName;
     private System.Windows.Forms.DataGridView homeDataGrid;
     private System.Windows.Forms.Label HomeTeam;
@@ -348,23 +358,23 @@ namespace ReboundLogParser2 {
     private System.Windows.Forms.Label HomeOT;
     private System.Windows.Forms.Label AwayOT;
     private System.Windows.Forms.Label MultipleFiles;
-    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label periodTextLabel;
     private System.Windows.Forms.Label periodLabel;
-        private System.Windows.Forms.Panel cefPanel1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.ComboBox comboBox3;
-        private System.Windows.Forms.ComboBox comboBox4;
-        private System.Windows.Forms.ComboBox comboBox5;
-        private System.Windows.Forms.ComboBox comboBox6;
-        private System.Windows.Forms.ComboBox comboBox7;
-        private System.Windows.Forms.ComboBox comboBox8;
-        private System.Windows.Forms.ComboBox comboBox9;
-        private System.Windows.Forms.ComboBox comboBox10;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button SendHomeStatsButton;
-        private System.Windows.Forms.Button SendAwayStatsButton;
-    }
+    private System.Windows.Forms.Panel cefPanel1;
+    private System.Windows.Forms.Button loadHomePlayersButton;
+    private System.Windows.Forms.ComboBox comboBox1;
+    private System.Windows.Forms.ComboBox comboBox2;
+    private System.Windows.Forms.ComboBox comboBox3;
+    private System.Windows.Forms.ComboBox comboBox4;
+    private System.Windows.Forms.ComboBox comboBox5;
+    private System.Windows.Forms.ComboBox comboBox6;
+    private System.Windows.Forms.ComboBox comboBox7;
+    private System.Windows.Forms.ComboBox comboBox8;
+    private System.Windows.Forms.ComboBox comboBox9;
+    private System.Windows.Forms.ComboBox comboBox10;
+    private System.Windows.Forms.Button loadAwayPlayersButton;
+    private System.Windows.Forms.Button SendHomeStatsButton;
+    private System.Windows.Forms.Button SendAwayStatsButton;
+  }
 }
 
