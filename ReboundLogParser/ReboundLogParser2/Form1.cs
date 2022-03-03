@@ -317,7 +317,6 @@ namespace ReboundLogParser2 {
             var changedComboBox = (sender as ComboBox);
             var isHomeTeamBox = _homePlayerBoxes.Any(box => box.Name.Equals(changedComboBox.Name));
             var teamBoxes = (isHomeTeamBox ? _homePlayerBoxes : _awayPlayerBoxes);
-            var otherBoxes = teamBoxes.Where(box => box != changedComboBox);
 
             var boxesWithDuplicateSelections = teamBoxes.GroupBy(b => b.SelectedItem)
                 .Where(g => g.Count() > 1 && g.Key != null)
