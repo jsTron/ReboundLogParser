@@ -18,13 +18,13 @@ namespace ReboundLogParser2 {
       base.Dispose(disposing);
     }
 
-    #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
-    private void InitializeComponent() {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.LoadLogsButton = new System.Windows.Forms.Button();
             this.LogFileName = new System.Windows.Forms.TextBox();
@@ -191,6 +191,7 @@ namespace ReboundLogParser2 {
             this.comboBox1.Size = new System.Drawing.Size(119, 21);
             this.comboBox1.TabIndex = 16;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
+            this.comboBox1.TextChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox2
             // 
@@ -200,6 +201,7 @@ namespace ReboundLogParser2 {
             this.comboBox2.Size = new System.Drawing.Size(119, 21);
             this.comboBox2.TabIndex = 16;
             this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
+            this.comboBox2.TextChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox3
             // 
@@ -209,6 +211,7 @@ namespace ReboundLogParser2 {
             this.comboBox3.Size = new System.Drawing.Size(119, 21);
             this.comboBox3.TabIndex = 16;
             this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
+            this.comboBox3.TextChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox4
             // 
@@ -218,6 +221,7 @@ namespace ReboundLogParser2 {
             this.comboBox4.Size = new System.Drawing.Size(119, 21);
             this.comboBox4.TabIndex = 16;
             this.comboBox4.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
+            this.comboBox4.TextChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox5
             // 
@@ -227,6 +231,7 @@ namespace ReboundLogParser2 {
             this.comboBox5.Size = new System.Drawing.Size(119, 21);
             this.comboBox5.TabIndex = 16;
             this.comboBox5.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
+            this.comboBox5.TextChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox6
             // 
@@ -236,6 +241,7 @@ namespace ReboundLogParser2 {
             this.comboBox6.Size = new System.Drawing.Size(119, 21);
             this.comboBox6.TabIndex = 16;
             this.comboBox6.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
+            this.comboBox6.TextChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox7
             // 
@@ -245,6 +251,7 @@ namespace ReboundLogParser2 {
             this.comboBox7.Size = new System.Drawing.Size(119, 21);
             this.comboBox7.TabIndex = 16;
             this.comboBox7.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
+            this.comboBox7.TextChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox8
             // 
@@ -254,6 +261,7 @@ namespace ReboundLogParser2 {
             this.comboBox8.Size = new System.Drawing.Size(119, 21);
             this.comboBox8.TabIndex = 16;
             this.comboBox8.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
+            this.comboBox8.TextChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox9
             // 
@@ -263,6 +271,7 @@ namespace ReboundLogParser2 {
             this.comboBox9.Size = new System.Drawing.Size(119, 21);
             this.comboBox9.TabIndex = 16;
             this.comboBox9.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
+            this.comboBox9.TextChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // comboBox10
             // 
@@ -272,6 +281,7 @@ namespace ReboundLogParser2 {
             this.comboBox10.Size = new System.Drawing.Size(119, 21);
             this.comboBox10.TabIndex = 16;
             this.comboBox10.SelectedIndexChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
+            this.comboBox10.TextChanged += new System.EventHandler(this.TeamComboBox_SelectedIndexChanged);
             // 
             // loadAwayPlayersButton
             // 

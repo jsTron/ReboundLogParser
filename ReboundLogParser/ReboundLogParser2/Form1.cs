@@ -315,20 +315,44 @@ namespace ReboundLogParser2 {
             var teamBoxes = (isHomeTeamBox ? _homePlayerBoxes : _awayPlayerBoxes);
             var otherBoxes = teamBoxes.Where(box => box != changedComboBox);
 
-            // Need to figure out how to check if all boxes in team box list have duplicate selections.
-            if (otherBoxes.Any(box =>
-                box.SelectedItem != null
-                && box.SelectedItem.Equals(changedComboBox.SelectedItem))
-            )
+            var boxesWithDuplicateSelections = teamBoxes.GroupBy(b => b.SelectedItem)
+                .Where(g => g.Count() > 1 && g.Key != null)
+                .Select(a => a.Key)
+                .ToList();
+            foreach (var dupePlayer in boxesWithDuplicateSelections)
             {
-                changedComboBox.ForeColor = System.Drawing.Color.Red;
-                (isHomeTeamBox ? SendHomeStatsButton : SendAwayStatsButton).Enabled = false;
+                if (dupePlayer != null)
+                {
+                    var boxes = teamBoxes.Select(x => x)
+                        .Where(y => y.SelectedItem != null
+                            && y.SelectedItem.Equals(dupePlayer));
+                    foreach (var box in boxes)
+                    {
+                        box.BackColor = System.Drawing.Color.Red;
+                    }
+                }
             }
-            else
+
+            var boxesWithoutDuplicateSelections = teamBoxes.GroupBy(a => a.SelectedItem)
+                .Where(g => g.Count() <= 1 || g.Key == null)
+                .Select(b => b.Key)
+                .ToList();
+            foreach (var nonDupePlayer in boxesWithoutDuplicateSelections)
             {
-                changedComboBox.ForeColor = default;
-                (isHomeTeamBox ? SendHomeStatsButton : SendAwayStatsButton).Enabled = true;
+                if (nonDupePlayer != null)
+                {
+                    var boxes = teamBoxes.Select(x => x)
+                        .Where(y => y.SelectedItem == null
+                            || y.SelectedItem.Equals(nonDupePlayer));
+                    foreach (var box in boxes)
+                    {
+                         box.BackColor = default;
+                    }
+                }
             }
+
+            var selectedTeamStatsButton = isHomeTeamBox ? SendHomeStatsButton : SendAwayStatsButton;
+            selectedTeamStatsButton.Enabled = boxesWithDuplicateSelections.Count() == 0;
         }
     }
 }
