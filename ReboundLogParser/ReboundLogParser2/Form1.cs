@@ -28,6 +28,10 @@ namespace ReboundLogParser2 {
 
         public Form1()
         {
+            CefSettings cefSettings = new CefSettings();
+            CefSharp.Cef.EnableHighDPISupport();
+            CefSharp.Cef.Initialize(cefSettings);
+
             InitializeComponent();
             _homePlayerBoxes = new List<ComboBox>() { comboBox1, comboBox2, comboBox3, comboBox4, comboBox5 };
             _awayPlayerBoxes = new List<ComboBox>() { comboBox6, comboBox7, comboBox8, comboBox9, comboBox10 };
