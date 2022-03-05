@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.IO;
-using Newtonsoft.Json.Linq;
 using CefSharp.WinForms;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace ReboundLogParser2 {
-    public partial class Form1 : Form
+namespace ReboundLogParser {
+    public partial class MainForm : Form
     {
         static List<stats> _homeTeamPlayers = new List<stats>();
         static List<stats> _awayTeamPlayers = new List<stats>();
@@ -17,48 +18,64 @@ namespace ReboundLogParser2 {
         static string _currentPeriod;
         static bool _overTime = false;
         static string _loadedFile;
+        static List<string> _loadedFiles = new List<string>();
+        static List<string> _lastLoadedFiles = new List<string>();
         static bool _multipleFiles = false;
-        const string WRONGPERIODTEXT = "The log file entered is not the 3rd period";
-        const string MULTIPLEFILESTEXT = "Multiple log files in log folder";
+        const string WRONGPERIODTEXT = "Period 3 log not found!";
+        const string MULTIPLEFILESTEXT = "Multiiple logfile mode!";
+        const string INVALIDJSONTEXT = "Invalid JSON, try again!";
         private ChromiumWebBrowser _browser;
-        private List<string> _homePlayers = null;
-        private List<string> _awayPlayers = null;
         private List<ComboBox> _homePlayerBoxes;
         private List<ComboBox> _awayPlayerBoxes;
 
-        public Form1()
+        public MainForm()
         {
             CefSettings cefSettings = new CefSettings();
             CefSharp.Cef.EnableHighDPISupport();
             CefSharp.Cef.Initialize(cefSettings);
 
             InitializeComponent();
-            _homePlayerBoxes = new List<ComboBox>() { comboBox1, comboBox2, comboBox3, comboBox4, comboBox5 };
-            _awayPlayerBoxes = new List<ComboBox>() { comboBox6, comboBox7, comboBox8, comboBox9, comboBox10 };
+            _homePlayerBoxes = new List<ComboBox>() { homePlayerBox1, homePlayerBox2, homePlayerBox3, homePlayerBox4, homePlayerBox5 };
+            _awayPlayerBoxes = new List<ComboBox>() { awayPlayerBox1, awayPlayerBox2, awayPlayerBox3, awayPlayerBox4, awayPlayerBox5 };
 
             _browser = new ChromiumWebBrowser("https://a.leaguerepublic.com/myaccount/login/index.html?lver=2");
             cefPanel1.Controls.Add(_browser);
         }
 
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            LoadLogFiles();
-        }
-
         private void LoadLogsButton_Click(object sender, EventArgs e)
         {
-            LoadLogFiles();
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    var fileTemp = dialog.FileNames.ToList();
+                    if (!_loadedFiles.Any(x => fileTemp.Contains(x)))
+                    {
+                        _loadedFiles.AddRange(fileTemp);
+                    }
+                    LoadLogFiles(_loadedFiles);
+                }
+            }
         }
 
-        private void LoadLogFiles()
+        private void LoadLogFiles(List<string> fileNames = null)
         {
             ResetFormData();
-            LoadAndParseLogFiles();
+            bool success = LoadAndParseLogFiles(fileNames);
             SetLoadedFileDisplays();
+            if (!success)
+            {
+                MultipleFiles.Text = INVALIDJSONTEXT;
+                MultipleFiles.Visible = true;
+                if (fileNames != null)
+                {
+                    _loadedFiles.RemoveAll(file => fileNames.Contains(file) && !_lastLoadedFiles.Contains(file));
+                }  
+            }
             SetTeamAndPeriodLabels();
             CheckOvertimeWin();
             PopulateDataGrid();
+            _lastLoadedFiles = new List<string>(_loadedFiles);
         }
 
         private void ResetFormData()
@@ -78,26 +95,32 @@ namespace ReboundLogParser2 {
             _loadedFile = String.Empty;
             _homeScore = 0;
             _awayScore = 0;
+            _period = 0;
+            SetTeamAndPeriodLabels();
+            _overTime = false;
+            CheckOvertimeWin();
+            _loadedFile = String.Empty;
+            LogFileName.Text = String.Empty;
         }
 
-        static void LoadAndParseLogFiles()
+        static bool LoadAndParseLogFiles(List<string> fileNames = null)
         {
-            string[] filePaths = Directory.GetFiles(@".\Logs\", "*.json",
-                                               SearchOption.TopDirectoryOnly);
+            bool success = false;
+            fileNames = fileNames ?? new List<string>();
+            foreach (var fileName in fileNames)
+            {
+                success = ParseJson(fileName);
+                if (!success)
+                {
+                    return success; // Will return false here
+                }
+                _loadedFile += $"{fileName}; ";
+            }
 
-            for (int m = 0; m < filePaths.Length; m++)
-            {
-                ParseJson(@filePaths[m]);
-                _loadedFile += (@filePaths[m] + "   ");
-            }
-            if (filePaths.Length > 1)
-            {
-                _multipleFiles = true;
-            }
-            else if (filePaths.Length < 1)
-            {
-                _loadedFile = "Problem Loading File";
-            }
+            _multipleFiles = fileNames.Count > 1;
+            _loadedFile = (fileNames.Count() < 1) ? "Problem Loading Files!" : _loadedFile;
+
+            return success; // True if successful, false if no files
         }
 
         private void SetLoadedFileDisplays()
@@ -109,8 +132,8 @@ namespace ReboundLogParser2 {
 
         private void SetTeamAndPeriodLabels()
         {
-            HomeTeam.Text = "Home Team: " + _homeScore.ToString();
-            AwayTeam.Text = "Away Team: " + _awayScore.ToString();
+            HomeTeam.Text = $"Home Team: {_homeScore}";
+            AwayTeam.Text = $"Away Team: {_awayScore}";
             periodLabel.Text = _period.ToString();
 
             if (_currentPeriod != "3")
@@ -141,9 +164,24 @@ namespace ReboundLogParser2 {
             awayDataGrid.DataSource = _awayTeamPlayers;
         }
 
-        static void ParseJson(string fileName)
+        static bool ParseJson(string fileName)
         {
-            dynamic o1 = JObject.Parse(File.ReadAllText(fileName));
+            dynamic o1 = new JObject();
+            try
+            {
+                o1 = JObject.Parse(File.ReadAllText(fileName));
+            }
+            catch (JsonReaderException jex)
+            {
+                _loadedFile = $"Problem Loading Files: {jex.Message}";
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _loadedFile = $"Problem Loading Files: {ex.Message}";
+                return false;
+            }
+
             _overTime = CheckOvertime(o1);
             string homeScoreString = o1.score.home;
             string awayScoreString = o1.score.away;
@@ -173,6 +211,8 @@ namespace ReboundLogParser2 {
             }
             _homeTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
             _awayTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
+
+            return true;
         }
 
         static bool CheckOvertime(dynamic statsObject)
@@ -318,17 +358,17 @@ namespace ReboundLogParser2 {
             var isHomeTeamBox = _homePlayerBoxes.Any(box => box.Name.Equals(changedComboBox.Name));
             var teamBoxes = (isHomeTeamBox ? _homePlayerBoxes : _awayPlayerBoxes);
 
-            var boxesWithDuplicateSelections = teamBoxes.GroupBy(b => b.SelectedItem)
-                .Where(g => g.Count() > 1 && g.Key != null)
-                .Select(a => a.Key)
+            var boxesWithDuplicateSelections = teamBoxes.GroupBy(box => box.SelectedItem)
+                .Where(groupings => groupings.Count() > 1 && groupings.Key != null)
+                .Select(boxBySelectedItem => boxBySelectedItem.Key)
                 .ToList();
             foreach (var dupePlayer in boxesWithDuplicateSelections)
             {
                 if (dupePlayer != null)
                 {
-                    var boxes = teamBoxes.Select(x => x)
-                        .Where(y => y.SelectedItem != null
-                            && y.SelectedItem.Equals(dupePlayer));
+                    var boxes = teamBoxes.Select(box => box)
+                        .Where(selectedBox => selectedBox.SelectedItem != null
+                            && selectedBox.SelectedItem.Equals(dupePlayer));
                     foreach (var box in boxes)
                     {
                         box.BackColor = System.Drawing.Color.Red;
@@ -336,17 +376,17 @@ namespace ReboundLogParser2 {
                 }
             }
 
-            var boxesWithoutDuplicateSelections = teamBoxes.GroupBy(a => a.SelectedItem)
-                .Where(g => g.Count() <= 1 || g.Key == null)
-                .Select(b => b.Key)
+            var boxesWithoutDuplicateSelections = teamBoxes.GroupBy(box => box.SelectedItem)
+                .Where(groupings => groupings.Count() <= 1 || groupings.Key == null)
+                .Select(boxBySelectedItem => boxBySelectedItem.Key)
                 .ToList();
             foreach (var nonDupePlayer in boxesWithoutDuplicateSelections)
             {
                 if (nonDupePlayer != null)
                 {
-                    var boxes = teamBoxes.Select(x => x)
-                        .Where(y => y.SelectedItem == null
-                            || y.SelectedItem.Equals(nonDupePlayer));
+                    var boxes = teamBoxes.Select(box => box)
+                        .Where(boxBySelectedItem => boxBySelectedItem.SelectedItem == null
+                            || boxBySelectedItem.SelectedItem.Equals(nonDupePlayer));
                     foreach (var box in boxes)
                     {
                          box.BackColor = default;
@@ -356,6 +396,43 @@ namespace ReboundLogParser2 {
 
             var selectedTeamStatsButton = isHomeTeamBox ? SendHomeStatsButton : SendAwayStatsButton;
             selectedTeamStatsButton.Enabled = boxesWithDuplicateSelections.Count() == 0;
+        }
+
+        private void DragDropPanel_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Link;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void DragDropPanel_DragDrop(object sender, DragEventArgs e)
+        {
+            var dropFiles = e.Data.GetData(DataFormats.FileDrop); // get all files dropped
+            List<string> files = new List<string>();
+            files.AddRange((dropFiles as string[]).ToList()); ;
+            if (files != null && files.Any())
+            {
+                foreach (var file in files)
+                {
+                    if (!_loadedFiles.Contains(file))
+                    {
+                        _loadedFiles.Add(file);
+                    }
+                }
+                LoadLogFiles(_loadedFiles);
+            }
+        }
+
+        private void ClearLogsButton_Click(object sender, EventArgs e)
+        {
+            _loadedFiles.Clear();
+            _lastLoadedFiles.Clear();
+            ResetFormData();
         }
     }
 }
