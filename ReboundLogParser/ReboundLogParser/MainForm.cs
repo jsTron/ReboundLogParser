@@ -62,14 +62,6 @@ namespace ReboundLogParser {
                     LoadLogFiles(_loadedFiles);
                 }
             }
-            if (homeDataGrid.Rows.Count > 0)
-            {
-                loadHomePlayersButton.Enabled = true;
-            }
-            if (awayDataGrid.Rows.Count > 0)
-            {
-                loadAwayPlayersButton.Enabled = true;
-            }
         }
 
         private void LoadLogFiles(List<string> fileNames = null)
@@ -90,6 +82,15 @@ namespace ReboundLogParser {
             CheckOvertimeWin();
             PopulateDataGrid();
             _lastLoadedFiles = new List<string>(_loadedFiles);
+
+            if (homeDataGrid.Rows.Count > 0)
+            {
+                loadHomePlayersButton.Enabled = true;
+            }
+            if (awayDataGrid.Rows.Count > 0)
+            {
+                loadAwayPlayersButton.Enabled = true;
+            }
         }
 
         private void ResetFormData()
