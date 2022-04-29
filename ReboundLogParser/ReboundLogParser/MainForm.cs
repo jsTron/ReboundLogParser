@@ -37,6 +37,12 @@ namespace ReboundLogParser {
             InitializeComponent();
             _homePlayerBoxes = new List<ComboBox>() { homePlayerBox1, homePlayerBox2, homePlayerBox3, homePlayerBox4, homePlayerBox5 };
             _awayPlayerBoxes = new List<ComboBox>() { awayPlayerBox1, awayPlayerBox2, awayPlayerBox3, awayPlayerBox4, awayPlayerBox5 };
+            _homePlayerBoxes.ForEach(box => box.Enabled = false);
+            _awayPlayerBoxes.ForEach(box => box.Enabled = false);
+            loadHomePlayersButton.Enabled = false;
+            loadAwayPlayersButton.Enabled = false;
+            SendHomeStatsButton.Enabled = false;
+            SendAwayStatsButton.Enabled = false;
 
             _browser = new ChromiumWebBrowser("https://a.leaguerepublic.com/myaccount/login/index.html?lver=2");
             cefPanel1.Controls.Add(_browser);
@@ -55,6 +61,14 @@ namespace ReboundLogParser {
                     }
                     LoadLogFiles(_loadedFiles);
                 }
+            }
+            if (homeDataGrid.Rows.Count > 0)
+            {
+                loadHomePlayersButton.Enabled = true;
+            }
+            if (awayDataGrid.Rows.Count > 0)
+            {
+                loadAwayPlayersButton.Enabled = true;
             }
         }
 
@@ -89,6 +103,8 @@ namespace ReboundLogParser {
             awayDataGrid.DataSource = null;
             homeDataGrid.Rows.Clear();
             awayDataGrid.Rows.Clear();
+            loadHomePlayersButton.Enabled = false;
+            loadAwayPlayersButton.Enabled = false;
             MultipleFiles.Visible = false;
 
             _multipleFiles = false;
@@ -307,7 +323,12 @@ namespace ReboundLogParser {
             ClearTeamComboBoxes(isHomeTeam);
             foreach (var box in playerBoxes)
             {
-                box.Items.AddRange(players.ToArray<object>());
+                var dataGrid = isHomeTeam ? homeDataGrid : awayDataGrid;
+                if (!dataGrid.Rows.Count.Equals(0) && playerBoxes.IndexOf(box) < dataGrid.Rows.Count)
+                {
+                    box.Enabled = true;
+                    box.Items.AddRange(players.ToArray<object>());
+                }
             }
         }
 
@@ -318,13 +339,19 @@ namespace ReboundLogParser {
             {
                 box.SelectedIndex = -1;
                 box.Items.Clear();
+                box.Enabled = false;
             }
         }
 
         private void SendStatsButton_Click(object sender, EventArgs e)
         {
             var isHomeTeam = (sender as Button).Name == "SendHomeStatsButton";
-            FillStatsInWebForm(isHomeTeam);
+            var playerBoxesFilled = !(isHomeTeam ? _homePlayerBoxes : _awayPlayerBoxes)
+                .Any(box => box.SelectedIndex.Equals(-1) && box.Enabled.Equals(true));
+            if (playerBoxesFilled)
+            {
+                FillStatsInWebForm(isHomeTeam);
+            }
         }
 
         private void FillStatsInWebForm(bool isHomeTeam)
@@ -395,7 +422,9 @@ namespace ReboundLogParser {
             }
 
             var selectedTeamStatsButton = isHomeTeamBox ? SendHomeStatsButton : SendAwayStatsButton;
-            selectedTeamStatsButton.Enabled = boxesWithDuplicateSelections.Count() == 0;
+            var selectedTeamBoxes = isHomeTeamBox ? _homePlayerBoxes : _awayPlayerBoxes;
+            selectedTeamStatsButton.Enabled = boxesWithDuplicateSelections.Count() == 0
+                && !selectedTeamBoxes.Any(box => box.Enabled.Equals(true) && box.SelectedIndex.Equals(-1));
         }
 
         private void DragDropPanel_DragOver(object sender, DragEventArgs e)
