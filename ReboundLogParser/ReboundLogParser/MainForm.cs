@@ -22,7 +22,7 @@ namespace ReboundLogParser {
         static List<string> _lastLoadedFiles = new List<string>();
         static bool _multipleFiles = false;
         const string WRONGPERIODTEXT = "Period 3 log not found!";
-        const string MULTIPLEFILESTEXT = "Multiiple logfile mode!";
+        const string MULTIPLEFILESTEXT = "Multiple logfile mode!";
         const string INVALIDJSONTEXT = "Invalid JSON, try again!";
         private ChromiumWebBrowser _browser;
         private List<ComboBox> _homePlayerBoxes;
