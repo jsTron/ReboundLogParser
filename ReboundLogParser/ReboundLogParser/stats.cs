@@ -7,7 +7,8 @@ namespace ReboundLogParser
         public stats(dynamic statsObject)
         {
             PlayerName = statsObject.username;
-            Team = statsObject.team;
+            _team = statsObject.team;
+            GameUserId = statsObject.game_user_id;
 
             try
             {
@@ -288,7 +289,8 @@ namespace ReboundLogParser
         }
 
         public string PlayerName { get; set; }
-        public string Team { get; private set; }
+        public string GameUserId { get; set; }
+        public string _team = "away";
         public double Goals { get; set; }
         public double Primary_assists { get; set; }
         public double Sec_assists { get; set; }
