@@ -1,6 +1,8 @@
-﻿enum StatsEnum
+﻿public enum StatsEnum
 {
     Goals,
+    Assists,
+    Points,
     PrimaryAssists,
     SecondaryAssists,
     Shots,
@@ -13,5 +15,6 @@
     Passes,
     Blocks,
     GameWinningGoals,
-    PossessionTime
+    PossessionTime,
+    PeriodsPlayed,
 }

@@ -30,8 +30,7 @@ namespace ReboundLogParser
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources =
-                new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.LoadLogsButton = new System.Windows.Forms.Button();
             this.LogFileName = new System.Windows.Forms.TextBox();
             this.homeDataGrid = new System.Windows.Forms.DataGridView();
@@ -77,10 +76,8 @@ namespace ReboundLogParser
             // 
             // LogFileName
             // 
-            this.LogFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top
-                | System.Windows.Forms.AnchorStyles.Left) 
-                | System.Windows.Forms.AnchorStyles.Right))
-            );
+            this.LogFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.LogFileName.Location = new System.Drawing.Point(26, 6);
             this.LogFileName.Name = "LogFileName";
             this.LogFileName.ReadOnly = true;
@@ -89,10 +86,8 @@ namespace ReboundLogParser
             // 
             // homeDataGrid
             // 
-            this.homeDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top
-                | System.Windows.Forms.AnchorStyles.Left) 
-                | System.Windows.Forms.AnchorStyles.Right))
-            );
+            this.homeDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.homeDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.homeDataGrid.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.homeDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -114,10 +109,8 @@ namespace ReboundLogParser
             // 
             // awayDataGrid
             // 
-            this.awayDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top
-                | System.Windows.Forms.AnchorStyles.Left) 
-                | System.Windows.Forms.AnchorStyles.Right))
-            );
+            this.awayDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.awayDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.awayDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.awayDataGrid.Location = new System.Drawing.Point(1, 322);
@@ -199,11 +192,9 @@ namespace ReboundLogParser
             // 
             // cefPanel1
             // 
-            this.cefPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top
-                | System.Windows.Forms.AnchorStyles.Bottom) 
-                | System.Windows.Forms.AnchorStyles.Left) 
-                | System.Windows.Forms.AnchorStyles.Right))
-            );
+            this.cefPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cefPanel1.Location = new System.Drawing.Point(4, 501);
             this.cefPanel1.Name = "cefPanel1";
             this.cefPanel1.Size = new System.Drawing.Size(933, 151);
@@ -352,10 +343,8 @@ namespace ReboundLogParser
             // DragDropPanel
             // 
             this.DragDropPanel.AllowDrop = true;
-            this.DragDropPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top
-                | System.Windows.Forms.AnchorStyles.Left) 
-                | System.Windows.Forms.AnchorStyles.Right))
-            );
+            this.DragDropPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.DragDropPanel.BackColor = System.Drawing.SystemColors.Control;
             this.DragDropPanel.Controls.Add(this.periodTextLabel);
             this.DragDropPanel.Controls.Add(this.periodLabel);
@@ -416,6 +405,7 @@ namespace ReboundLogParser
             this.DragDropPanel.ResumeLayout(false);
             this.DragDropPanel.PerformLayout();
             this.ResumeLayout(false);
+
         }
 
         #endregion

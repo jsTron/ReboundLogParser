@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using System.IO;
 using CefSharp.WinForms;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace ReboundLogParser {
     public partial class MainForm : Form
@@ -27,11 +26,12 @@ namespace ReboundLogParser {
         private ChromiumWebBrowser _browser;
         private List<ComboBox> _homePlayerBoxes;
         private List<ComboBox> _awayPlayerBoxes;
+        private List<Match> _parsedLogs = new List<Match>();
+        private Match _match;
 
         public MainForm()
         {
             CefSettings cefSettings = new CefSettings();
-            CefSharp.Cef.EnableHighDPISupport();
             CefSharp.Cef.Initialize(cefSettings);
 
             InitializeComponent();
@@ -120,7 +120,7 @@ namespace ReboundLogParser {
             LogFileName.Text = String.Empty;
         }
 
-        static bool LoadAndParseLogFiles(List<string> fileNames = null)
+        private bool LoadAndParseLogFiles(List<string> fileNames = null)
         {
             bool success = false;
             fileNames = fileNames ?? new List<string>();
@@ -133,6 +133,7 @@ namespace ReboundLogParser {
                 }
                 _loadedFile += $"{fileName}; ";
             }
+            TabulateSelectedLogs();
 
             _multipleFiles = fileNames.Count > 1;
             _loadedFile = (fileNames.Count() < 1) ? "Problem Loading Files!" : _loadedFile;
@@ -181,12 +182,12 @@ namespace ReboundLogParser {
             awayDataGrid.DataSource = _awayTeamPlayers;
         }
 
-        static bool ParseJson(string fileName)
+        private bool ParseJson(string fileName)
         {
-            dynamic o1 = new JObject();
+            _match = null;
             try
             {
-                o1 = JObject.Parse(File.ReadAllText(fileName));
+                _match = JsonConvert.DeserializeObject<Match>(File.ReadAllText(fileName));
             }
             catch (JsonReaderException jex)
             {
@@ -199,40 +200,48 @@ namespace ReboundLogParser {
                 return false;
             }
 
-            _overTime = CheckOvertime(o1);
-            string homeScoreString = o1.score.home;
-            string awayScoreString = o1.score.away;
-            string periodString = o1.current_period;
-            _homeScore += int.Parse(homeScoreString);
-            _awayScore += int.Parse(awayScoreString);
-            _period = int.Parse(periodString);
-            _currentPeriod = o1.current_period;
-            foreach (dynamic player in o1.players)
-            {
-                var isHomeTeam = player.team == "home";
-                var teamToBuild = isHomeTeam ? _homeTeamPlayers : _awayTeamPlayers;
-                if (PlayerExists(player, teamToBuild))
-                {
-                    for (int p = 0; p < teamToBuild.Count; p++)
-                    {
-                        if (teamToBuild[p].PlayerName == player.username.ToString())
-                        {
-                            teamToBuild[p].addValues(player);
-                        }
-                    }
-                }
-                else
-                {
-                    teamToBuild.Add(new stats(player));
-                }
-            }
-            _homeTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
-            _awayTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
+            _parsedLogs.Add(_match);
 
             return true;
         }
 
-        static bool CheckOvertime(dynamic statsObject)
+        private bool TabulateSelectedLogs()
+        {
+            _parsedLogs.Sort(delegate (Match m1, Match m2) { return m1.CurrentPeriod.CompareTo(m2.CurrentPeriod); });
+            foreach (Match o1 in _parsedLogs)
+            {
+                _overTime = CheckOvertime(o1);
+                _homeScore += o1.Score.Home;
+                _awayScore += o1.Score.Away;
+                _period = int.Parse(o1.CurrentPeriod);
+                _currentPeriod = o1.CurrentPeriod;
+                foreach (Player player in o1.Players)
+                {
+                    var isHomeTeam = player.Team == "home";
+                    var teamToBuild = isHomeTeam ? _homeTeamPlayers : _awayTeamPlayers;
+                    if (PlayerExists(player, teamToBuild))
+                    {
+                        for (int p = 0; p < teamToBuild.Count; p++)
+                        {
+                            if (teamToBuild[p].PlayerName == player.Username)
+                            {
+                                teamToBuild[p].addValues(player);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        teamToBuild.Add(new stats(player));
+                    }
+                }
+                _homeTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
+                _awayTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
+            }
+
+            return true;
+        }
+
+        private bool CheckOvertime(Match statsObject)
         {
             bool returnBool = false;
             double homeTeamOT = 0;
@@ -240,14 +249,14 @@ namespace ReboundLogParser {
             
             for (int i = 0; i < 5; i++)
             {
-                if (statsObject.players[i].team == "away")
+                if (statsObject.Players[i].Team == "away")
                 {
                     break;
                 }
 
                 try
                 {
-                    homeTeamOT = statsObject.players[i].stats.overtime_wins;
+                    homeTeamOT = statsObject.Players[i].Stats.OvertimeWins;
                 }
                 catch
                 {
@@ -258,7 +267,7 @@ namespace ReboundLogParser {
                 {
                     try
                     {
-                        awayTeamOT = statsObject.players[i].stats.overtime_losses;
+                        awayTeamOT = statsObject.Players[i].Stats.OvertimeLosses;
                     }
                     catch
                     {
@@ -280,12 +289,12 @@ namespace ReboundLogParser {
             return returnBool;
         }
 
-        static bool PlayerExists(dynamic passedPlayer, List<stats> playerArray)
+        static bool PlayerExists(Player passedPlayer, List<stats> playerArray)
         {
             bool returnValue = false;
             for (int j = 0; j < playerArray.Count; j++)
             {
-                if (playerArray[j].PlayerName == passedPlayer.username.ToString())
+                if (playerArray[j].PlayerName == passedPlayer.Username)
                 {
                     returnValue = true;
                 }
@@ -462,7 +471,9 @@ namespace ReboundLogParser {
         {
             _loadedFiles.Clear();
             _lastLoadedFiles.Clear();
+            _parsedLogs.Clear();
             ResetFormData();
+            MultipleFiles.Visible = false;
         }
     }
 }

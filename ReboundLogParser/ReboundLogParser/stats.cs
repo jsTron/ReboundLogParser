@@ -2,17 +2,17 @@
 
 namespace ReboundLogParser
 {
-    class stats
+    public class stats
     {
-        public stats(dynamic statsObject)
+        public stats(Player player)
         {
-            PlayerName = statsObject.username;
-            _team = statsObject.team;
-            GameUserId = statsObject.game_user_id;
+            PlayerName = player.Username;
+            _team = player.Team;
+            GameUserId = player.GameUserId;
 
             try
             {
-                Goals = statsObject.stats.goals.Value;
+                Goals = player.Stats.Goals;
             }
             catch
             {
@@ -21,7 +21,25 @@ namespace ReboundLogParser
 
             try
             {
-                Primary_assists = statsObject.stats.primary_assists.Value;
+                Assists = player.Stats.Assists;
+            }
+            catch
+            {
+                Assists = 0;
+            }
+
+            try
+            {
+                Points = Goals + Assists;
+            }
+            catch
+            {
+                Points = 0;
+            }
+
+            try
+            {
+                Primary_assists = player.Stats.PrimaryAssists;
             }
             catch
             {
@@ -30,7 +48,7 @@ namespace ReboundLogParser
 
             try
             {
-                Sec_assists = statsObject.stats.secondary_assists.Value;
+                Sec_assists = player.Stats.SecondaryAssists;
             }
             catch
             {
@@ -39,7 +57,7 @@ namespace ReboundLogParser
 
             try
             {
-                Shots = statsObject.stats.shots.Value;
+                Shots = player.Stats.Shots;
             }
             catch
             {
@@ -48,7 +66,7 @@ namespace ReboundLogParser
 
             try
             {
-                Saves = statsObject.stats.saves.Value;
+                Saves = player.Stats.Saves;
             }
             catch
             {
@@ -57,7 +75,7 @@ namespace ReboundLogParser
 
             try
             {
-                Faceoffs_won = statsObject.stats.faceoffs_won.Value;
+                Faceoffs_won = player.Stats.FaceoffsWon;
             }
             catch
             {
@@ -66,7 +84,7 @@ namespace ReboundLogParser
 
             try
             {
-                Faceoffs_lost = statsObject.stats.faceoffs_lost.Value;
+                Faceoffs_lost = player.Stats.FaceoffsLost;
             }
             catch
             {
@@ -75,7 +93,7 @@ namespace ReboundLogParser
 
             try
             {
-                Takeaways = statsObject.stats.takeaways.Value;
+                Takeaways = player.Stats.Takeaways;
             }
             catch
             {
@@ -84,7 +102,7 @@ namespace ReboundLogParser
 
             try
             {
-                Turnovers = statsObject.stats.turnovers.Value;
+                Turnovers = player.Stats.Turnovers;
             }
             catch
             {
@@ -93,7 +111,7 @@ namespace ReboundLogParser
 
             try
             {
-                Post_hits = statsObject.stats.post_hits.Value;
+                Post_hits = player.Stats.PostHits;
             }
             catch
             {
@@ -102,7 +120,7 @@ namespace ReboundLogParser
 
             try
             {
-                Passes = statsObject.stats.passes.Value;
+                Passes = player.Stats.Passes;
             }
             catch
             {
@@ -111,7 +129,7 @@ namespace ReboundLogParser
 
             try
             {
-                Blocks = statsObject.stats.blocks.Value;
+                Blocks = player.Stats.Blocks;
             }
             catch
             {
@@ -120,7 +138,7 @@ namespace ReboundLogParser
 
             try
             {
-                GW_Goals = statsObject.stats.game_winning_goals.Value;
+                GW_Goals = player.Stats.GameWinningGoals;
             }
             catch
             {
@@ -129,18 +147,28 @@ namespace ReboundLogParser
 
             try
             {
-                Possession_Time = statsObject.stats.possession_time_sec.Value;
+                Possession_Time = player.Stats.PossessionTimeSec;
             }
             catch
             {
                 Possession_Time = 0;
             }
-        }
-
-        public void addValues(dynamic statsObject) {
+            
             try
             {
-                Goals += statsObject.stats.goals.Value;
+                PeriodsPlayed = player.Stats.GamesPlayed;
+            }
+            catch
+            {
+                PeriodsPlayed = 0;
+            }
+        }
+
+        public void addValues(Player player)
+        {
+            try
+            {
+                Goals += player.Stats.Goals;
             }
             catch
             {
@@ -149,16 +177,16 @@ namespace ReboundLogParser
 
             try
             {
-                Primary_assists += statsObject.stats.primary_assists.Value;
+                Primary_assists += player.Stats.PrimaryAssists;
             }
-            catch 
+            catch
             {
                 Primary_assists += 0;
             }
 
             try
             {
-                Sec_assists += statsObject.stats.secondary_assists.Value;
+                Sec_assists += player.Stats.SecondaryAssists;
             }
             catch
             {
@@ -167,7 +195,7 @@ namespace ReboundLogParser
 
             try
             {
-                Shots += statsObject.stats.shots.Value;
+                Shots += player.Stats.Shots;
             }
             catch
             {
@@ -176,7 +204,7 @@ namespace ReboundLogParser
 
             try
             {
-                Saves += statsObject.stats.saves.Value;
+                Saves += player.Stats.Saves;
             }
             catch
             {
@@ -185,7 +213,7 @@ namespace ReboundLogParser
 
             try
             {
-                Faceoffs_won += statsObject.stats.faceoffs_won.Value;
+                Faceoffs_won += player.Stats.FaceoffsWon;
             }
             catch
             {
@@ -194,7 +222,7 @@ namespace ReboundLogParser
 
             try
             {
-                Faceoffs_lost += statsObject.stats.faceoffs_lost.Value;
+                Faceoffs_lost += player.Stats.FaceoffsLost;
             }
             catch
             {
@@ -203,7 +231,7 @@ namespace ReboundLogParser
 
             try
             {
-                Takeaways += statsObject.stats.takeaways.Value;
+                Takeaways += player.Stats.Takeaways;
             }
             catch
             {
@@ -212,7 +240,7 @@ namespace ReboundLogParser
 
             try
             {
-                Turnovers += statsObject.stats.turnovers.Value;
+                Turnovers += player.Stats.Turnovers;
             }
             catch
             {
@@ -221,7 +249,7 @@ namespace ReboundLogParser
 
             try
             {
-                Post_hits += statsObject.stats.post_hits.Value;
+                Post_hits += player.Stats.PostHits;
             }
             catch
             {
@@ -230,7 +258,7 @@ namespace ReboundLogParser
 
             try
             {
-                Passes += statsObject.stats.passes.Value;
+                Passes += player.Stats.Passes;
             }
             catch
             {
@@ -239,7 +267,7 @@ namespace ReboundLogParser
 
             try
             {
-                Blocks += statsObject.stats.blocks.Value;
+                Blocks += player.Stats.Blocks;
             }
             catch
             {
@@ -248,7 +276,7 @@ namespace ReboundLogParser
 
             try
             {
-                GW_Goals += statsObject.stats.game_winning_goals.Value;
+                GW_Goals += player.Stats.GameWinningGoals;
             }
             catch
             {
@@ -257,7 +285,7 @@ namespace ReboundLogParser
 
             try
             {
-                Possession_Time += statsObject.stats.possession_time_sec.Value;
+                Possession_Time += player.Stats.PossessionTimeSec;
             }
             catch
             {
@@ -270,6 +298,8 @@ namespace ReboundLogParser
             Dictionary<StatsEnum, object> kvp = new Dictionary<StatsEnum, object>()
             {
                 { StatsEnum.Goals, Goals },
+                { StatsEnum.Assists, Assists },
+                { StatsEnum.Points, Points },
                 { StatsEnum.PrimaryAssists, Primary_assists },
                 { StatsEnum.SecondaryAssists, Sec_assists },
                 { StatsEnum.Shots, Shots },
@@ -282,7 +312,8 @@ namespace ReboundLogParser
                 { StatsEnum.Passes, Passes },
                 { StatsEnum.Blocks, Blocks },
                 { StatsEnum.GameWinningGoals, GW_Goals },
-                { StatsEnum.PossessionTime, Possession_Time }
+                { StatsEnum.PossessionTime, Possession_Time },
+                { StatsEnum.PeriodsPlayed, PeriodsPlayed },
             };
 
             return (double)kvp[enumValue];
@@ -292,6 +323,8 @@ namespace ReboundLogParser
         public string GameUserId { get; set; }
         public string _team = "away";
         public double Goals { get; set; }
+        public double Assists { get; set; }
+        public double Points { get; set; }
         public double Primary_assists { get; set; }
         public double Sec_assists { get; set; }
         public double Shots { get; set; }
@@ -305,5 +338,6 @@ namespace ReboundLogParser
         public double Blocks { get; set; }
         public double GW_Goals { get; set; }
         public double Possession_Time { get; set; }
+        public double PeriodsPlayed { get; set; }
     }
 }
