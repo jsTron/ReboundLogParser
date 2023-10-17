@@ -27,7 +27,6 @@ namespace ReboundLogParser {
         private List<ComboBox> _homePlayerBoxes;
         private List<ComboBox> _awayPlayerBoxes;
         private List<Match> _parsedLogs = new List<Match>();
-        private Match _match;
 
         public MainForm()
         {
@@ -124,6 +123,7 @@ namespace ReboundLogParser {
         {
             bool success = false;
             fileNames = fileNames ?? new List<string>();
+            _parsedLogs.Clear();
             foreach (var fileName in fileNames)
             {
                 success = ParseJson(fileName);
@@ -184,10 +184,10 @@ namespace ReboundLogParser {
 
         private bool ParseJson(string fileName)
         {
-            _match = null;
+            Match parsedPeriod = null;
             try
             {
-                _match = JsonConvert.DeserializeObject<Match>(File.ReadAllText(fileName));
+                parsedPeriod = JsonConvert.DeserializeObject<Match>(File.ReadAllText(fileName));
             }
             catch (JsonReaderException jex)
             {
@@ -200,7 +200,7 @@ namespace ReboundLogParser {
                 return false;
             }
 
-            _parsedLogs.Add(_match);
+            _parsedLogs.Add(parsedPeriod);
 
             return true;
         }
@@ -208,35 +208,62 @@ namespace ReboundLogParser {
         private bool TabulateSelectedLogs()
         {
             _parsedLogs.Sort(delegate (Match m1, Match m2) { return m1.CurrentPeriod.CompareTo(m2.CurrentPeriod); });
-            foreach (Match o1 in _parsedLogs)
+            Match period3 = _parsedLogs.Last();
+            
+            foreach (Player player in period3.Players)
             {
-                _overTime = CheckOvertime(o1);
-                _homeScore += o1.Score.Home;
-                _awayScore += o1.Score.Away;
-                _period = int.Parse(o1.CurrentPeriod);
-                _currentPeriod = o1.CurrentPeriod;
-                foreach (Player player in o1.Players)
+                // Get and store period player stat sums
+                var sums = new List<PlayerStatSums>();
+                foreach (Match m in _parsedLogs)
                 {
-                    var isHomeTeam = player.Team == "home";
-                    var teamToBuild = isHomeTeam ? _homeTeamPlayers : _awayTeamPlayers;
-                    if (PlayerExists(player, teamToBuild))
+                    var playerSum = new PlayerStatSums();
+                    playerSum.GameUserId = player.GameUserId;
+                    playerSum.CurrentPeriod = m.CurrentPeriod;
+                    try
                     {
-                        for (int p = 0; p < teamToBuild.Count; p++)
+                        playerSum.StatSum = SumPlayerStats(m.Players.Single(p => p.GameUserId.Equals(player.GameUserId)));
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+
+                    sums.Add(playerSum);
+                }
+
+                int periodsPlayed = 1;
+                if (sums.Count > 1)
+                {
+                    for (int i = 1; i < sums.Count; i++)
+                    {
+                        if (!sums[i].StatSum.Equals(sums[i - 1].StatSum))
                         {
-                            if (teamToBuild[p].PlayerName == player.Username)
-                            {
-                                teamToBuild[p].addValues(player);
-                            }
+                            periodsPlayed++;
                         }
                     }
-                    else
-                    {
-                        teamToBuild.Add(new stats(player));
-                    }
                 }
-                _homeTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
-                _awayTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
+                else
+                {
+                    periodsPlayed = 1;
+                }
+
+                // Save player periods played
+                player.Stats.GamesPlayed = periodsPlayed;
             }
+
+            _overTime = CheckOvertime(period3);
+            _homeScore += period3.Score.Home;
+            _awayScore += period3.Score.Away;
+            _period = int.Parse(period3.CurrentPeriod);
+            _currentPeriod = period3.CurrentPeriod;
+            foreach (Player player in period3.Players)
+            {
+                var isHomeTeam = player.Team == "home";
+                var teamToBuild = isHomeTeam ? _homeTeamPlayers : _awayTeamPlayers;
+                    teamToBuild.Add(new stats(player));
+            }
+            _homeTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
+            _awayTeamPlayers.Sort(delegate (stats c1, stats c2) { return c1.PlayerName.CompareTo(c2.PlayerName); });
 
             return true;
         }
@@ -289,17 +316,34 @@ namespace ReboundLogParser {
             return returnBool;
         }
 
-        static bool PlayerExists(Player passedPlayer, List<stats> playerArray)
+        public double SumPlayerStats(Player player)
         {
-            bool returnValue = false;
-            for (int j = 0; j < playerArray.Count; j++)
-            {
-                if (playerArray[j].PlayerName == passedPlayer.Username)
-                {
-                    returnValue = true;
-                }
-            }
-            return returnValue;
+            double sum = player.Stats.Assists +
+                player.Stats.Blocks +
+                player.Stats.ConcededGoals +
+                player.Stats.ContributedGoals +
+                player.Stats.FaceoffsLost +
+                player.Stats.FaceoffsWon +
+                player.Stats.GamesPlayed +
+                player.Stats.GameWinningGoals +
+                player.Stats.Goals +
+                player.Stats.Losses +
+                player.Stats.OvertimeLosses +
+                player.Stats.OvertimeWins +
+                player.Stats.Passes +
+                player.Stats.PossessionTimeSec +
+                player.Stats.PostHits +
+                player.Stats.PrimaryAssists +
+                player.Stats.Saves +
+                player.Stats.Score +
+                player.Stats.SecondaryAssists +
+                player.Stats.Shots +
+                player.Stats.Shutouts +
+                player.Stats.ShutoutsAgainst +
+                player.Stats.Takeaways +
+                player.Stats.Turnovers +
+                player.Stats.Wins;
+            return sum;
         }
 
         private async void TeamPlayersLoadButton_Click(object sender, EventArgs e)

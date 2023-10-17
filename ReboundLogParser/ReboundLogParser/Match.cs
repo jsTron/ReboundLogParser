@@ -82,4 +82,11 @@ namespace ReboundLogParser
         [JsonProperty("overtime_losses")]
         public double OvertimeLosses { get; set; }
     }
+
+    public class PlayerStatSums
+    {
+        public string GameUserId { get; set; }
+        public string CurrentPeriod { get; set; }
+        public double StatSum { get; set; }
+    }
 }
