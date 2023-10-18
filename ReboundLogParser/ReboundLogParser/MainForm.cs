@@ -324,7 +324,8 @@ namespace ReboundLogParser {
                 player.Stats.ContributedGoals +
                 player.Stats.FaceoffsLost +
                 player.Stats.FaceoffsWon +
-                player.Stats.GamesPlayed +
+                // This stat is broken, do not use!!
+                //player.Stats.GamesPlayed +
                 player.Stats.GameWinningGoals +
                 player.Stats.Goals +
                 player.Stats.Losses +
