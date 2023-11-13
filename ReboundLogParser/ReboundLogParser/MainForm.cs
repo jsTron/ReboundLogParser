@@ -20,9 +20,9 @@ namespace ReboundLogParser {
         static List<string> _loadedFiles = new List<string>();
         static List<string> _lastLoadedFiles = new List<string>();
         static bool _multipleFiles = false;
-        const string WRONGPERIODTEXT = "Period 3 log not found!";
-        const string MULTIPLEFILESTEXT = "Multiple logfile mode!";
-        const string INVALIDJSONTEXT = "Invalid JSON, try again!";
+        const string WRONGPERIODTEXT = "No Per. 3 log!";
+        const string MULTIPLEFILESTEXT = "Multi-log Mode!";
+        const string INVALIDJSONTEXT = "Invalid JSON!";
         private ChromiumWebBrowser _browser;
         private List<ComboBox> _homePlayerBoxes;
         private List<ComboBox> _awayPlayerBoxes;
@@ -34,8 +34,10 @@ namespace ReboundLogParser {
             CefSharp.Cef.Initialize(cefSettings);
 
             InitializeComponent();
-            _homePlayerBoxes = new List<ComboBox>() { homePlayerBox1, homePlayerBox2, homePlayerBox3, homePlayerBox4, homePlayerBox5 };
-            _awayPlayerBoxes = new List<ComboBox>() { awayPlayerBox1, awayPlayerBox2, awayPlayerBox3, awayPlayerBox4, awayPlayerBox5 };
+            _homePlayerBoxes = new List<ComboBox>() { homePlayerBox1, homePlayerBox2, homePlayerBox3, homePlayerBox4, homePlayerBox5,
+                homePlayerBox6, homePlayerBox7, homePlayerBox8, homePlayerBox9, homePlayerBox10 };
+            _awayPlayerBoxes = new List<ComboBox>() { awayPlayerBox1, awayPlayerBox2, awayPlayerBox3, awayPlayerBox4, awayPlayerBox5,
+                awayPlayerBox6, awayPlayerBox7, awayPlayerBox8, awayPlayerBox9, awayPlayerBox10 };
             _homePlayerBoxes.ForEach(box => box.Enabled = false);
             _awayPlayerBoxes.ForEach(box => box.Enabled = false);
             loadHomePlayersButton.Enabled = false;
@@ -179,7 +181,11 @@ namespace ReboundLogParser {
         private void PopulateDataGrid()
         {
             homeDataGrid.DataSource = _homeTeamPlayers;
+            homeDataGrid.AutoResizeColumn(0, DataGridViewAutoSizeColumnMode.AllCellsExceptHeader);
+            homeDataGrid.AutoResizeColumn(1, DataGridViewAutoSizeColumnMode.AllCellsExceptHeader);
             awayDataGrid.DataSource = _awayTeamPlayers;
+            awayDataGrid.AutoResizeColumn(0, DataGridViewAutoSizeColumnMode.AllCellsExceptHeader);
+            awayDataGrid.AutoResizeColumn(1, DataGridViewAutoSizeColumnMode.AllCellsExceptHeader);
         }
 
         private bool ParseJson(string fileName)
