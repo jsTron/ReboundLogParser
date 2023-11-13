@@ -544,7 +544,7 @@ namespace ReboundLogParser
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(960, 695);
             this.Name = "MainForm";
-            this.Text = "Rebound Log Parser 6.3.2";
+            this.Text = "Rebound Log Parser 6.4";
             ((System.ComponentModel.ISupportInitialize)(this.homeDataGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.awayDataGrid)).EndInit();
             this.DragDropPanel.ResumeLayout(false);
