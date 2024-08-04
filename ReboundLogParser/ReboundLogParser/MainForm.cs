@@ -277,7 +277,6 @@ namespace ReboundLogParser {
         private bool CheckOvertime(Match statsObject)
         {
             bool returnBool = false;
-            double overtimeWins = 0.0;
             foreach(Player player in statsObject.Players)
             {
                 if (player.Stats.OvertimeWins > 0.0)
