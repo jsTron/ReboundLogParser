@@ -277,46 +277,14 @@ namespace ReboundLogParser {
         private bool CheckOvertime(Match statsObject)
         {
             bool returnBool = false;
-            double homeTeamOT = 0;
-            double awayTeamOT = 0;
-            
-            for (int i = 0; i < 5; i++)
+            double overtimeWins = 0.0;
+            foreach(Player player in statsObject.Players)
             {
-                if (statsObject.Players[i].Team == "away")
+                if (player.Stats.OvertimeWins > 0.0)
                 {
+                    returnBool = true;
                     break;
                 }
-
-                try
-                {
-                    homeTeamOT = statsObject.Players[i].Stats.OvertimeWins;
-                }
-                catch
-                {
-                    homeTeamOT = 0;
-                }
-
-                if (homeTeamOT == 0)
-                {
-                    try
-                    {
-                        awayTeamOT = statsObject.Players[i].Stats.OvertimeLosses;
-                    }
-                    catch
-                    {
-                        awayTeamOT = 0;
-                    }
-                }
-
-                if (homeTeamOT == 1 || awayTeamOT == 1)
-                {
-                    break;
-                }
-            }
-
-            if (awayTeamOT == 1 || homeTeamOT == 1)
-            {
-                returnBool = true;
             }
 
             return returnBool;
